@@ -1,0 +1,16 @@
+#botton-form {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#text-field-control {
+    overflow: hidden;
+    padding-right: 10px;
+}
+
+#message-box {
+    padding-bottom: 0px;
+    margin-bottom: 4rem;
+    display: 'flex';
+}
