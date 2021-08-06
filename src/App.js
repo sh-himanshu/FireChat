@@ -2,7 +2,6 @@ import '@fontsource/roboto';
 import { Toolbar } from '@material-ui/core';
 import Alert from '@material-ui/core/Alert';
 import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -21,6 +20,7 @@ import ContextMenu from './components/context-menu/ContextMenu';
 import FacebookCircularProgress from './components/progress/Spinner';
 import SendButton from './components/send-button/SendButton';
 import InputTextField from './components/text-input/TextInput';
+import AvatarTooltips from './components/user-info/UserInfo';
 import ParseDate from './utils/date';
 
 if (!firebase.apps.length) {
@@ -109,12 +109,13 @@ function ChatRoom() {
         if (isEmpty(formValue)) {
             return;
         }
-        const { uid, photoURL } = auth.currentUser;
+        const { uid, photoURL, displayName } = auth.currentUser;
         await messagesRef.add({
             text: formValue.trim().slice(0, maxCharLength),
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,
             photoURL,
+            displayName,
         });
         setFormValue('');
         dummy.current.scrollIntoView({ behaviour: 'smooth' });
@@ -178,7 +179,7 @@ function ChatRoom() {
 }
 
 function ChatMessage(props) {
-    const { text, uid, photoURL, createdAt } = props.message;
+    const { text, uid, photoURL, createdAt, displayName } = props.message;
     const dateTime = createdAt ? ParseDate(createdAt.toDate()) : '...';
     if (uid === auth.currentUser.uid) {
         const msgBody = (
@@ -228,18 +229,22 @@ function ChatMessage(props) {
     } else {
         const msgBody = (
             <Paper
-                sx={{ maxWidth: 400, my: 1, mx: 0, p: 2 }}
+                sx={{ maxWidth: 400, my: 1, mx: 0, p: 1.5 }}
                 style={{ borderRadius: '20px' }}
             >
                 <Grid
                     container
                     wrap="nowrap"
-                    spacing={2}
+                    spacing={1}
                     direction="column"
                     justifyContent="space-between"
                     alignItems="flex-start"
                 >
-                    <Grid item></Grid>
+                    <Grid item>
+                        <Typography sx={{ fontSize: '.9rem' }}>
+                            {text}
+                        </Typography>
+                    </Grid>
                     <Grid item>
                         <Typography
                             sx={{ fontSize: '0.7rem' }}
@@ -257,13 +262,9 @@ function ChatMessage(props) {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={1}
-                sx={{ py: 1 }}
+                sx={{ py: 0 }}
             >
-                <Avatar
-                    alt="avatar"
-                    src={photoURL || 'https://i.stack.imgur.com/34AD2.jpg'}
-                    sx={{ width: 40, height: 40 }}
-                />
+                <AvatarTooltips photoURL={photoURL} displayName={displayName} />
                 <ContextMenu msgBody={msgBody} />
             </Stack>
         );
