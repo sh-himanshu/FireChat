@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 export default function AvatarTooltips(props) {
     const [open, setOpen] = React.useState(false);
-    const [photoURL, displayName] = props;
+
     const handleTooltipClose = () => {
         setOpen(false);
     };
@@ -27,11 +27,14 @@ export default function AvatarTooltips(props) {
                     disableFocusListener
                     disableHoverListener
                     disableTouchListener
-                    title={displayName || 'None'}
+                    title={props.displayName || 'None'}
                 >
                     <Avatar
                         alt="avatar"
-                        src={photoURL || 'https://i.stack.imgur.com/34AD2.jpg'}
+                        src={
+                            props.photoURL ||
+                            'https://i.stack.imgur.com/34AD2.jpg'
+                        }
                         sx={{ width: 40, height: 40, mt: '10px' }}
                         onClick={handleTooltipOpen}
                     />
